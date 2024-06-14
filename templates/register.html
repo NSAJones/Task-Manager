@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+
+{% block head %}
+{{ super() }}
+
+<script type="text/javascript" src="static/js/create_user.js"></script>
+
+{% endblock %}
+
+{% block content %}
+<h1>this is the register</h1>
+
+<form id="register" onsubmit="create_user();return false;">
+    <label for="username">username:</label> 
+    <input type="text" name="username" id="username" placeholder="username">
+    <br>
+    <label for="password">password:</label>
+    <input type="password" name="password" id="password" placeholder="password">
+    
+    <input type="submit" value="create user">
+</form>
+{% endblock %}
