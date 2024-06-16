@@ -20,14 +20,8 @@ def create_user():
     """get username and password from json and create user.
     Return session ID"""
 
-    print(request.get_json(), file=sys.stdout)
-
     if not request.is_json:
         return "request is not json"
-
-    elif request.method != "POST":
-        return "request is not post"
-        
     else:
         data = request.get_json()
         
@@ -46,22 +40,23 @@ def create_user():
 def authenticate():
     """get username and password from json and authenticate.
     Return session ID"""
-
-    if not request.is_json():
-        return "request is not json"
-
-    elif request.method != "POST":
-        return "request is not post"
-        
+    
+    if not request.is_json:
+        return "request is not json"    
     else:
         try:
-            # Check 
-            data = request.json
-            username = request.form.get("username")
-            password = request.form.get("password")
+            data = request.get_json()
+        
+            username = data["username"]
+            password = data["password"]
             sessionID = db.database.validate_user(username,password)
 
-            return jsonify({"sessionID":sessionID})
+            print(sessionID, file=sys.stdout)
+
+            if sessionID is not None:
+                return jsonify({"sessionID":sessionID})
+            else:
+                return "invalid user"
 
         except Exception as e:
             print(e)

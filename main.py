@@ -13,8 +13,9 @@ def index():
     return render_template("index.html")
 
 @app.route("/profile")
-def register():
-    return render_template("profile.html")
+def profile():
+    return render_template("profile.html",db.database.g)
+
 
 if __name__ =='__main__':
     app.run()

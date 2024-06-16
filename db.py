@@ -1,9 +1,9 @@
 import sqlite3 as sql
-import uuid
+import uuid,sys
 
 class Database:
     def __init__(self) -> None:
-        self.db = sql.connect("data.db", check_same_thread=False)
+        self.db = sql.connect("db/data.db", check_same_thread=False)
         self.cursor = self.db.cursor()
         self.create_db()
 
@@ -17,7 +17,9 @@ class Database:
 
         CREATE TABLE IF NOT EXISTS ToDoList(
         ID INTEGER PRIMARY KEY AUTOINCREMENT,
-        name VARCHAR(25) NOT NULL
+        name VARCHAR(25) NOT NULL,
+        creator VARCHAR(15) NOT NULL,
+        FOREIGN KEY (creator) REFERENCES Login(username)
         );
 
         CREATE TABLE IF NOT EXISTS Task (
@@ -42,6 +44,8 @@ class Database:
             (username,password))
         response = self.cursor.fetchall()
 
+        print(response,username,password, file=sys.stdout)
+
         # If User exists generate sessionID and update user in table
         if response != []:
             sessionID = str(uuid.uuid4())
@@ -53,7 +57,7 @@ class Database:
             return sessionID
         return None
     
-    def sessionID(self,id:str):
+    def sessionID(self,id:str) -> str:
         """Check session ID is valid, returns username."""
 
         # Check session ID is valid
@@ -68,9 +72,26 @@ class Database:
         return None
 
     def get_todolists(self,username:str):
-        pass
+        self.cursor.execute(
+            "SELECT * FROM ToDoList WHERE creator=?",
+            (username,)
+        )
+        return self.cursor.fetchall()
 
     def get_tasks(self,id:int):
+        self.cursor.execute(
+            "SELECT * FROM Task WHERE ToDoListID=?",
+            (id,)
+        )
+        return self.cursor.fetchall()
+
+    def create_todolist(self,username:str,name:str):
+        self.cursor.execute(
+            "INSERT INTO ToDoList (name,creator) VALUES (?,?)",
+            (id,name,username)
+        )
+
+    def update_task(self,taskID):
         pass
     
     def create_user(self,username:str,password:str):
@@ -93,6 +114,16 @@ class Database:
 
             return True
         return False
+
+    def get_user(self,sessionID:str) -> str:
+        self.cursor.execute("SELECT username FROM Login WHERE sessionID=?",
+                        (sessionID,))
+        response = self.cursor.fetchall()
+
+        if response:
+            return response[0][0]
+        return None
+
 
     def create_todolist(self,sessionID:str):
         pass

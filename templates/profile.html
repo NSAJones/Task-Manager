@@ -1,5 +1,18 @@
 {% extends "base.html" %}
 
+{% block head %}
+{{ super() }}
+
+<script type="text/javascript" src="static/js/profile.js"></script>
+
+{% endblock %}
+
 {% block content %}
-<h1>this is the profile</h1>
+<h1>Profile</h1>
+
+<h2 id=username>placeholder</h2>
+
+<ul id="Todolists">
+</ul>
+
 {% endblock %}

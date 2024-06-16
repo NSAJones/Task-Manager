@@ -1,5 +1,25 @@
 {% extends "base.html" %}
 
+{% block head %}
+{{ super() }}
+
+<script type="text/javascript" src="static/js/authenticate.js"></script>
+
+{% endblock %}
+
+
+
 {% block content %}
 <h1>this is the login</h1>
+
+<form id="login" onsubmit="authenticate();return false;">
+    <label for="username">username:</label> 
+    <input type="text" name="username" id="username" placeholder="username">
+    <br>
+    <label for="password">password:</label>
+    <input type="password" name="password" id="password" placeholder="password">
+    
+    <input type="submit" value="login">
+</form>
+
 {% endblock %}
