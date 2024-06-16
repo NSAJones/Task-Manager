@@ -44,7 +44,7 @@ class Database:
             (username,password))
         response = self.cursor.fetchall()
 
-        print(response,username,password, file=sys.stdout)
+        
 
         # If User exists generate sessionID and update user in table
         if response != []:
@@ -53,7 +53,7 @@ class Database:
                 "UPDATE Login SET sessionID=? WHERE username=? AND password=?",
                 (sessionID,username,password)
                 )
-            
+            self.db.commit()
             return sessionID
         return None
     
@@ -91,6 +91,8 @@ class Database:
             (id,name,username)
         )
 
+        self.db.commit()
+
     def update_task(self,taskID):
         pass
     
@@ -104,7 +106,6 @@ class Database:
         response = self.cursor.fetchall()
 
         # If user doesn't exist create user
-        print(username,password)
         if response == []:
             self.cursor.execute(
                 "INSERT INTO Login (username,password) VALUES (?,?)",
@@ -120,16 +121,23 @@ class Database:
                         (sessionID,))
         response = self.cursor.fetchall()
 
+        print(response,sessionID, file=sys.stdout)
+
         if response:
             return response[0][0]
         return None
 
 
     def create_todolist(self,sessionID:str):
-        pass
+        """Create empty todolist, return id of newly created list"""
 
-    def append_task(self,sessionID:str):
-        pass
+        username = self.get_user(sessionID)
+        self.cursor.execute(
+            "INSERT INTO ToDoList (creator,name) VALUES (?,?)",
+            (username,"untitled"))
+        
+        # Return new entry id
+        return self.cursor.lastrowid
 
 database = Database()
     

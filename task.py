@@ -26,14 +26,26 @@ def task_view(taskID):
     return render_template("task-view.html")
 
 @task.route("/task-edit/<taskID>")
-def task_edit():
+def task_edit(taskID):
     return render_template("task-edit.html")
 
-@task.route("api/create-task")
+@task.route("/api/create-todo",methods=["POST"])
+def create_todo():
+    """Create a blank task, returns id of task created"""
 
-@task.route("api/update-task")
+    if not request.is_json:
+        return "request is not json"
+    elif not request.get_json()["sessionID"]:
+        return "expected sessionID in request"
+    else:
+        data = db.database.create_todolist(request.get_json()["sessionID"])
+        return jsonify(data)
 
-@task.route("api/profile-data",methods=["POST"])
+@task.route("/api/update-task")
+def update_task():
+    pass
+
+@task.route("/api/profile-data",methods=["POST"])
 def profile_data():
     """Gets profile data such as the username or list of tasks"""
 
@@ -53,7 +65,5 @@ def profile_data():
         data = jsonify({"username":username,"task_list":task_list})
 
         return data
-
-    return render_template("profile.html",db.database.g)
 
 
