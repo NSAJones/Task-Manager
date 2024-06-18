@@ -78,31 +78,82 @@ class Database:
         )
         return self.cursor.fetchall()
 
-    def get_tasks(self,id:int):
+    def get_todolist(self,id:int):
         self.cursor.execute(
             "SELECT * FROM Task WHERE ToDoListID=?",
             (id,)
         )
-        return self.cursor.fetchall()
+        tasks = self.cursor.fetchall()
+        self.cursor.execute(
+            "SELECT * FROM TodoList WHERE ID=?",
+            (id,)
+        )
+        todolist = self.cursor.fetchall()[0]
+        print(todolist,id,file=sys.stdout)
+        return {"todolist":todolist,"tasks":tasks}
 
-    def create_todolist(self,username:str,name:str):
+    def create_todolist(self,username:str,name:str="untitled"):
         self.cursor.execute(
             "INSERT INTO ToDoList (name,creator) VALUES (?,?)",
-            (id,name,username)
+            (id,name,username,)
         )
 
         self.db.commit()
 
-    def update_task(self,taskID):
-        pass
+    def check_creator(self,sessionID,taskID):
+        username = self.sessionID(sessionID)
+        self.cursor.execute(
+            """SELECT ID FROM ToDoList WHERE
+            ID=? AND creator=?
+            """,
+            (taskID,username))
+        response = self.cursor.fetchall()
+        return (response != [])
+
+    def update_task(self,taskID,task_json):
+        taskID = int(taskID)
+        name = task_json["name"]
+        tasks = task_json["task_list"]
+
+        
+        # Update name of todolist
+        self.cursor.execute(
+            "UPDATE ToDoList SET name=? WHERE ID=?",
+            (name,taskID)
+            )
+        
+        # Remove existing tasks in Task table
+        self.cursor.execute(
+            "DELETE FROM Task WHERE ToDoListID=?",
+            (taskID,)
+            )
+        
+        # Create new tasks in Task table
+        values_list = []
+        values_string = ", ".join([f"({taskID},?,?)"]*len(tasks))
+        values_string = ("""INSERT INTO Task (ToDoListID,name,description)
+                         VALUES """ + values_string)
+        print(values_string, file=sys.stdout)
+        for t in tasks:
+            values_list.append(t["name"])
+            if "description" in t.keys():
+                values_list.append(t["description"])
+            else:
+                values_list.append("")
+            
+        self.cursor.execute(values_string,values_list)
+        
+        self.db.commit()
+
+        
     
     def create_user(self,username:str,password:str):
         """Creates a new user."""
 
         # Check user exists
         self.cursor.execute(
-            "SELECT * FROM Login WHERE username=? AND password=?",
-            (username,password))
+            "SELECT * FROM Login WHERE username=?",
+            (username,))
         response = self.cursor.fetchall()
 
         # If user doesn't exist create user
@@ -113,8 +164,8 @@ class Database:
             )
             self.db.commit()
 
-            return True
-        return False
+            
+        return response != []
 
     def get_user(self,sessionID:str) -> str:
         self.cursor.execute("SELECT username FROM Login WHERE sessionID=?",

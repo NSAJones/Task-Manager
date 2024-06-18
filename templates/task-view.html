@@ -1,5 +1,18 @@
 {% extends "base.html" %}
 
+{% block head %}
+{{ super() }}
+
+<script type="text/javascript" src="{{ url_for('static',filename='js/tasks.js') }}"></script>
+<meta name="task-id" content="{{taskID}}">
+
+{% endblock %}
+
 {% block content %}
-<h1>this is the task viewo</h1>
+
+<h1 id="todo-title"> </h1>
+
+<ul id="todo-list">
+</ul>
+
 {% endblock %}

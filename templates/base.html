@@ -3,7 +3,7 @@
     <title>{% block title %}Task Manager{% endblock %}</title>
 
     {% block head %}
-    <link rel="stylesheet" href="static/css/style.css" />
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}" />
 
     <script
     src="https://code.jquery.com/jquery-3.7.1.min.js"
@@ -17,11 +17,17 @@
     
 </head>
 <body>
-    <header> header wow </header>
+    <header>
+        <a href="{{ url_for('users.login') }}">login</a>
+        <a href="{{ url_for('users.register') }}">register</a>
+        <a href="{{ url_for('profile') }}">profile</a>
+    </header>
 
-    {% block content %}
-    <h1>This is a blank page wow</h1>
-    {% endblock %}
+    <div class="content">
+        {% block content %}
+        <h1>This is a blank page wow</h1>
+        {% endblock %}
+    </div>
 
     <footer> footer wow</footer>
 </body>

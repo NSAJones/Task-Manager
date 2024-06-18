@@ -1,0 +1,86 @@
+
+
+*{
+    font-family:'Courier New', Courier, monospace;
+
+    --bg-colour: rgb(115, 115, 170);
+    --p-colour: rgb(77, 77, 126);
+    --d-colour: rgb(43, 43, 61);
+
+    --t-colour: white;
+
+    color: white;
+    padding: 0.5em;
+
+    transition: all 0.5s ease-in-out;
+}
+
+body{
+    background-color: var(--bg-colour);
+    margin:0;
+    padding:0;
+}
+
+
+
+.content{
+    min-height: 100vh;
+}
+
+header,footer,input,textarea,button,h3,p{
+    background-color: var(--p-colour);
+}
+
+input:hover,button:hover,textarea:hover{
+    background-color: var(--d-colour);
+}
+
+header,footer{
+    height: 5em;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+input,textarea,button,h3,p{
+    border: 0;
+    border-radius: 0.5em;
+    margin:0.25em
+}
+
+::placeholder {
+    color: var(--bg-colour);
+    opacity: 1; /* Firefox */
+  }
+
+ul{
+    display: flex;
+    justify-content:center;
+    list-style-type: none;
+    flex-wrap: wrap;
+    gap:0.5em;
+
+}
+
+li{
+    width:20em ;
+    height:18em ;
+    display: flex;
+
+    flex-direction: column;
+    justify-content:stretch;
+}
+
+[name="task"]{
+    width:100%;
+    height: 3em;
+    word-wrap: break-word;
+
+}
+
+[name="description"]{
+    flex-grow:1;
+    width:100%;
+    resize:none;
+    word-wrap: break-word;
+}

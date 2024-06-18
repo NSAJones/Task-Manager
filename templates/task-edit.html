@@ -1,5 +1,21 @@
 {% extends "base.html" %}
 
+{% block head %}
+{{ super() }}
+
+<script type="text/javascript" src="{{ url_for('static',filename='js/tasks.js') }}"></script>
+<meta name="task-id" content="{{taskID}}">
+
+{% endblock %}
+
 {% block content %}
 <h1>this is the task editor</h1>
+<input id="todo-title" type="text" value="todo title">
+
+<button id="create-task">create new task</button>
+<button id="save-list">save</button>
+
+<ul id="todo-list">
+</ul>
+
 {% endblock %}

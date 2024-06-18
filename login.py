@@ -1,4 +1,4 @@
-from flask import Blueprint,render_template,jsonify,request
+from flask import Blueprint,render_template,jsonify,request,redirect,url_for
 import db
 import sys
 
@@ -30,7 +30,7 @@ def create_user():
 
         #Create user in database
         user_created = db.database.create_user(username,password)
-
+        print(user_created)
         if user_created:
             return "User created"
         else:

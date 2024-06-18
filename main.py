@@ -1,7 +1,7 @@
-from flask import Flask,render_template,url_for
+from flask import Flask,render_template,url_for,request,url_for,redirect
 import login,task,db
 
-app = Flask(__name__)
+app = Flask(__name__,"/static")
 
 # Import blueprints from modules
 app.register_blueprint(login.users)
@@ -14,7 +14,12 @@ def index():
 
 @app.route("/profile")
 def profile():
-    return render_template("profile.html")
+    if "sessionID" in request.cookies:
+        sessionID = request.cookies["sessionID"]
+        if db.database.sessionID(sessionID) is not None:
+            return render_template("profile.html")
+        
+    return redirect(url_for("users.login"))
 
 
 if __name__ =='__main__':
